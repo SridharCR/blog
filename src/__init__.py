@@ -1,11 +1,13 @@
 import os
 from flask import Flask
 
+
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='sridhar',
-        DATABASE=os.path.join(app.instance_path,'flaskr.sqllite'),
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqllite'),
     )
 
     if test_config is None:
@@ -22,12 +24,13 @@ def create_app(test_config=None):
     def hello():
         return "Hello World"
 
-    from . import db, auth
+    from src.model import db
+    from src.controller import auth
     db.init_app(app)
     app.register_blueprint(auth.bp)
 
-    from . import blog_home
-    app.register_blueprint(blog_home.bp)
+    from src.controller import posts
+    app.register_blueprint(posts.bp)
     app.add_url_rule('/', endpoint="index")
 
     return app

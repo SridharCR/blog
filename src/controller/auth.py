@@ -3,9 +3,10 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from src.db import get_db
+from src.model.db import get_db
+from src.model.models import get_username
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -42,11 +43,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+        user = get_username(username)
 
         if user is None:
             error = 'Incorrect username.'

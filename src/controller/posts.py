@@ -3,17 +3,15 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from src.auth import login_required
-from src.db import get_db
+from src.controller.auth import login_required
+from src.model.models import fetch_posts, insert_post, delete_post, update_post, fetch_post
 
 bp = Blueprint('blog', __name__)
 
 
 @bp.route('/')
 def index():
-    db = get_db()
-    posts = db.execute('SELECT p.id, title, body, created, author_id, username'
-                       ' FROM post p JOIN user u ON p.author_id = u.id ORDER BY created DESC').fetchall()
+    posts = fetch_posts()
     return render_template('blog/index.html', posts=posts)
 
 
@@ -31,18 +29,13 @@ def create():
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute('INSERT INTO POST(title, body, author_id) VALUES(?, ?, ?)', (title, body, g.user['id']))
-            db.commit()
+            insert_post(title, body)
             return redirect(url_for('blog.index'))
     return render_template('blog/create.html')
 
 
 def get_post(id, check_author=True):
-    post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username FROM post p JOIN user u ON p.author_id = u.id '
-        'WHERE p.id = ?',
-        (id,)).fetchone()
+    post = fetch_post(id)
     if post is None:
         abort(404, "Post id {0} doesn't exist.".format(id))
 
@@ -66,9 +59,7 @@ def update(id):
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute('UPDATE post SET title = ?, body = ? WHERE id = ?', (title, body, id))
-            db.commit()
+            update_post(title, body, id)
             return redirect(url_for('blog.index'))
     return render_template('blog/update.html', post=post)
 
@@ -77,7 +68,5 @@ def update(id):
 @login_required
 def delete(id):
     get_post(id)
-    db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
-    db.commit()
+    delete_post(id)
     return redirect(url_for('blog.index'))
