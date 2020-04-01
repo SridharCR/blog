@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from src.controller.auth import login_required
 from src.model.models import fetch_posts, insert_post, delete_post, update_post, fetch_post
+from src.views.auth import login_required
 
 bp = Blueprint('blog', __name__)
 

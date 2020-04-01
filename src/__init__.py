@@ -1,6 +1,6 @@
 import os
-from flask import Flask
 
+from flask import Flask
 
 
 def create_app(test_config=None):
@@ -25,11 +25,11 @@ def create_app(test_config=None):
         return "Hello World"
 
     from src.model import db
-    from src.controller import auth
+    from src.views import auth
     db.init_app(app)
     app.register_blueprint(auth.bp)
 
-    from src.controller import posts
+    from src.views import posts
     app.register_blueprint(posts.bp)
     app.add_url_rule('/', endpoint="index")
 
