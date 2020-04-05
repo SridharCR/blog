@@ -3,7 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from src.model.models import fetch_posts, insert_post, delete_post, update_post, fetch_post
+from src.model.db import get_db
+from src.model.models import BlogModels
 from src.views.auth import login_required
 
 bp = Blueprint('blog', __name__)
@@ -11,7 +12,8 @@ bp = Blueprint('blog', __name__)
 
 @bp.route('/')
 def index():
-    posts = fetch_posts()
+    data_object = BlogModels(db_conn=get_db())
+    posts = data_object.fetch_posts()
     return render_template('blog/index.html', posts=posts)
 
 
@@ -22,20 +24,21 @@ def create():
         title = request.form['title']
         body = request.form['body']
         error = None
-
+        data_object = BlogModels(db_conn=get_db())
         if not title:
             error = "Title is required"
 
         if error is not None:
             flash(error)
         else:
-            insert_post(title, body)
+            data_object.insert_post(title, body)
             return redirect(url_for('blog.index'))
     return render_template('blog/create.html')
 
 
 def get_post(id, check_author=True):
-    post = fetch_post(id)
+    data_object = BlogModels(db_conn=get_db())
+    post = data_object.fetch_post(id)
     if post is None:
         abort(404, "Post id {0} doesn't exist.".format(id))
 
@@ -52,14 +55,14 @@ def update(id):
         title = request.form['title']
         body = request.form['body']
         error = None
-
+        data_object = BlogModels(db_conn=get_db())
         if not title:
             error = "Title is required"
 
         if error is not None:
             flash(error)
         else:
-            update_post(title, body, id)
+            data_object.update_post(title, body, id)
             return redirect(url_for('blog.index'))
     return render_template('blog/update.html', post=post)
 
@@ -67,6 +70,7 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
+    data_object = BlogModels(db_conn=get_db())
     get_post(id)
-    delete_post(id)
+    data_object.delete_post(id)
     return redirect(url_for('blog.index'))

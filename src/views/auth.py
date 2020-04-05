@@ -6,7 +6,7 @@ from flask import (
 from werkzeug.security import check_password_hash
 
 from src.model.db import get_db
-from src.model.models import get_username, get_logged_user, get_user_id, insert_new_user
+from src.model.models import BlogModels
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -16,17 +16,16 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
-
+        data_object = BlogModels(db_conn=get_db())
         if not username:
             error = "Username is required"
         elif not password:
             error = "Password is required"
-        elif get_user_id(username) is not None:
+        elif data_object.get_user_id(username) is not None:
             error = 'User {} is already registered.'.format(username)
         if error is None:
-            insert_new_user(username, password)
+            data_object.insert_new_user(username, password)
             return redirect(url_for('auth.login'))
 
         flash(error)
@@ -40,7 +39,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = get_username(username)
+        data_object = BlogModels(db_conn=get_db())
+        user = data_object.get_username(username)
 
         if user is None:
             error = 'Incorrect username.'
@@ -60,11 +60,11 @@ def login():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
-
+    data_object = BlogModels(db_conn=get_db())
     if user_id is None:
         g.user = None
     else:
-        g.user = get_logged_user(id)
+        g.user = data_object.get_logged_user(user_id)
 
 
 @bp.route('/logout')
