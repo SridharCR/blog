@@ -1,4 +1,3 @@
-from flask import g
 from werkzeug.security import generate_password_hash
 
 
@@ -17,17 +16,16 @@ class BlogModels():
                           ' FROM post p JOIN user u ON p.author_id = u.id ORDER BY created DESC')
         return db_cursor.fetchall()
 
-    def insert_post(self, title, body):
+    def insert_post(self, title, body, id):
         db_cursor = self.db_conn.cursor()
-        db_cursor.execute('INSERT INTO POST(title, body, author_id) VALUES(%s, %s, %s)', (title, body, g.user['id']))
+        db_cursor.execute('INSERT INTO POST(title, body, author_id) VALUES(%s, %s, %s)', (title, body, id))
         self.db_conn.commit()
 
     def fetch_post(self, id):
         db_cursor = self.db_conn.cursor(dictionary=True)
         db_cursor.execute(
             'SELECT p.id, title, body, created, author_id, username FROM post p JOIN user u ON p.author_id = u.id '
-            'WHERE p.id = %s',
-            (id,))
+            'WHERE p.id = %s', (id,))
         return db_cursor.fetchone()
 
     def update_post(self, title, body, id):

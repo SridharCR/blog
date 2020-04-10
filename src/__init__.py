@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask
 
 
@@ -12,11 +10,6 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
     @app.route('/hello')
     def hello():
         return "Hello World"
@@ -24,7 +17,7 @@ def create_app(test_config=None):
     from src.model import db
     from src.views import auth
     db.init_app(app)
-    app.register_blueprint(auth.bp)
+    app.register_blueprint(auth.auth_blueprint)
 
     from src.views import posts
     app.register_blueprint(posts.bp)
