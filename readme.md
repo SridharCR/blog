@@ -3,19 +3,32 @@ A simple blog with basic functionalities to register, login, post and to read bl
 
 Flask is a light weight web framework based on python. It helps to create simple WSGI for requests and responses.
 
-## Prerequiste
-Run the python script to install the required modules for running the application.
+## Prerequisite
+Run the python script to install the required modules for running the application. Run the python script with the 
+specified args. This installs the packages in the requirements.txt file.
 ```sh
-$ python setup.py
+$ python setup.py setup
 ```
-This installs the packages in the requirements.txt file.
+Now the required packages are installed now. Go ahead and run the application.
+```shell script
+$ python setup.py run
+```
+The flash application with the WSGI server is up and running.
 
 ## Design 
 The application follows MVC pattern. The *Model-View-Controller* helps to design robust softwares. Blog application is currently evolving to MVC. 
 
 
+![MVC pattern](mvc.jpg)
+
+## REST APIs
+The rest apis carry out operations like, create post, update post, and delete post.
+
 ## Data
 The data are being stored in the open source relational databases, Mysql. Though various ORMs such as SQLAlchemy are available, this application is written in the traditional way, inorder to have strong boundary between the data and code.
+
+## Test
+Unit test are yet to be done
 
 ## References:
 1. Flask Documentation: https://flask.palletsprojects.com/en/1.1.x/
