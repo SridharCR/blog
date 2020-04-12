@@ -16,8 +16,10 @@ $ python setup.py run
 The flash application with the WSGI server is up and running.
 
 ## Design 
-The application follows MVC pattern. The *Model-View-Controller* helps to design robust softwares. Blog application is currently evolving to MVC. 
-
+The application follows MVC pattern. The *Model-View-Controller* helps to design robust software. Blog application is currently evolving to MVC. 
+The controllers owns the business logic, and does the computation, and written with the light weight flask framework.
+The models owns the code which interacts with the database, the controllers directly imports model whenever they are needed.
+The views owns the complete front end written in the react library. 
 
 ![MVC pattern](mvc.jpg)
 
@@ -33,3 +35,4 @@ Unit test are yet to be done
 ## References:
 1. Flask Documentation: https://flask.palletsprojects.com/en/1.1.x/
 2. Martin Fowler, Design of Enterprise Application Architecture: http://ce.sharif.edu/courses/97-98/2/ce418-1/resources/root/Books/Patterns%20of%20Enterprise%20Application%20Architecture%20-%20Martin%20Fowler.pdf
+3. CORS Issue: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS

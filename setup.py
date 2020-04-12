@@ -34,8 +34,8 @@ def run_flask_app():
         os.system("set flask_app=src")
         os.system("set flask_debug=true")
     else:
-        subprocess.call(["export","flask_app=src"])
-        subprocess.call(["export","flask_debug=true"])
+        os.system("export flask_app=src")
+        os.system("export flask_debug=true")
     os.system("flask run")
 
 if __name__ == "__main__":
