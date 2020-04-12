@@ -17,6 +17,8 @@ class BlogModels():
         return db_cursor.fetchall()
 
     def insert_post(self, title, body, id):
+        f = open("info_logs.txt","w")
+        f.write(title+body)
         db_cursor = self.db_conn.cursor()
         db_cursor.execute('INSERT INTO POST(title, body, author_id) VALUES(%s, %s, %s)', (title, body, id))
         self.db_conn.commit()

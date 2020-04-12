@@ -1,5 +1,5 @@
 from flask import Flask
-
+from flask_cors import CORS
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -14,13 +14,13 @@ def create_app(test_config=None):
     def hello():
         return "Hello World"
 
-    from src.model import db
-    from src.views import auth
+    from src.models import db
+    from src.controllers import auth
     db.init_app(app)
     app.register_blueprint(auth.auth_blueprint)
 
-    from src.views import posts
+    from src.controllers import posts
     app.register_blueprint(posts.bp)
     app.add_url_rule('/', endpoint="index")
-
+    CORS(app)
     return app

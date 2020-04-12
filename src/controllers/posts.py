@@ -1,13 +1,13 @@
 from flask import (Blueprint, flash, request, jsonify)
 from flask_restful import Resource, Api
 from werkzeug.exceptions import abort
+from flask_cors import CORS
 
-from src.model.db import get_db
-from src.model.models import BlogModels
+from src.models.db import get_db
+from src.models.models import BlogModels
 
 bp = Blueprint('blog', __name__)
 api_bp = Api(bp)
-
 
 def get_post(id):
     data_object = BlogModels(db_conn=get_db())
@@ -15,7 +15,6 @@ def get_post(id):
     if post is None:
         abort(404, "Post id {0} doesn't exist.".format(id))
     return post
-
 
 class PostCreate(Resource):
     def post(self):
@@ -33,9 +32,7 @@ class PostCreate(Resource):
             data_object.insert_post(title, body, id)
             return jsonify("True")
 
-
 api_bp.add_resource(PostCreate, '/create')
-
 
 class PostUpdate(Resource):
     def post(self, id):
@@ -58,9 +55,7 @@ class PostUpdate(Resource):
         post = get_post(id)
         return jsonify(post)
 
-
 api_bp.add_resource(PostUpdate, '/<int:id>/update')
-
 
 class PostGeneral(Resource):
     def get(self):
@@ -68,9 +63,7 @@ class PostGeneral(Resource):
         posts = data_object.fetch_posts()
         return jsonify(posts)
 
-
 api_bp.add_resource(PostGeneral, '/')
-
 
 class PostDelete(Resource):
     def post(self, id):
@@ -78,6 +71,5 @@ class PostDelete(Resource):
         get_post(id)
         data_object.delete_post(id)
         return jsonify("True", "Deleted successfully")
-
 
 api_bp.add_resource(PostDelete, '/<int:id>/delete')

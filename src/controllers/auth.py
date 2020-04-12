@@ -4,8 +4,8 @@ from flask import (Blueprint, flash, g, redirect, render_template, request, sess
 from flask_restful import Resource, Api
 from werkzeug.security import check_password_hash
 
-from src.model.db import get_db
-from src.model.models import BlogModels
+from src.models.db import get_db
+from src.models.models import BlogModels
 
 auth_blueprint = Blueprint('auth', __name__, url_prefix='/auth')
 auth_api_bp = Api(auth_blueprint)
