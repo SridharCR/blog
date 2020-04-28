@@ -1,14 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import SimplePost from './atoms/SimplePost';
+import Routes from './atoms/Routes';
 import Header from './atoms/Header';
+import Button from './atoms/Button';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" >
         <Header />
-        <SimplePost />
+        <Routes/>
+        <Button />
     </div>
   );
 }
